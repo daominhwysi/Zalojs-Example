@@ -7,7 +7,6 @@ const {
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 module.exports = async (message, client, args) => {
   const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-  await mongoClient.connect();
 
   const generationConfig = {
     temperature: 0.9,
