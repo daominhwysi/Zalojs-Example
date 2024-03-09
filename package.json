@@ -1,17 +1,7 @@
 {
-  "name": "zalojs-example",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "axios": "^1.6.7",
     "chess.js": "^1.0.0-beta.8",
-    "clipboardy": "^4.0.0",
-    "zalojs": "^1.1.1"
+    "zalojs": "^2.0.5"
   }
 }

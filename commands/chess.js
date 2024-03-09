@@ -15,14 +15,14 @@ async function chess(message, client, args) {
     } else if (command === 'end') {
         await endGame(client);
     } else {
-        await client.sendMessage('Invalid command. Please use "!chess start" to start the game, "!chess move" to make a move, or "!chess end" to end the game.');
+        await client.send({ message : 'Invalid command. Please use "!chess start" to start the game, "!chess move" to make a move, or "!chess end" to end the game.'});
     }
 }
 
 // Function to make a move
 async function movePiece(client, message, args) {
     if (!gameStarted) {
-        await client.sendMessage('No game is currently running.');
+        await client.send({ message : 'No game is currently running.'});
         return;
     }
 
@@ -43,18 +43,18 @@ async function movePiece(client, message, args) {
 
     try {
         if (game.move(move)) {
-            await client.sendMessage(`Move ${fromSquare} to ${toSquare} successful.`);
+            await client.send({ message : `Move ${fromSquare} to ${toSquare} successful.`});
             await sendBoardImage(client);
             // Check if game is over
             if (game.isGameOver() || game.isDraw() || game.isCheckmate()) {
                 await endGame(client);
             }
         } else {
-            await client.sendMessage('Invalid move. Please try again.');
+            await client.send({message : 'Invalid move. Please try again.'});
         }
     } catch (error) {
         console.error('Error occurred while making the move:', error);
-        await client.sendMessage('An error occurred while making the move. Please try again.');
+        await client.send({ message : 'An error occurred while making the move. Please try again.'})
     }
 }
 
@@ -62,36 +62,26 @@ async function movePiece(client, message, args) {
 async function sendBoardImage(client) {
     const fen = game.fen();
     const imageUrl = `https://fen2png.com/api/?fen=${fen}&raw=true`;
-    const imagePath = path.join(__dirname, 'saved_image.png'); // Path to save the image
   
     try {
+        
       const response = await axios.get(imageUrl, { responseType: 'stream' });
-      response.data.pipe(fs.createWriteStream(imagePath));
-  
-      console.log('Image saved successfully at:', imagePath);
-  
-      // Upload the image file
-      const inputUploadHandle = await page.$('input[type=file]');
-      await inputUploadHandle.uploadFile(imagePath);
-  
-      console.log('Image uploaded successfully.');
-  
+      await response.data.pipe(fs.createWriteStream(path.join(__dirname, 'saved_image.png')));
+      await client.send({file : path.join(__dirname, 'saved_image.png')})
     } catch (error) {
       console.error('Error occurred while fetching or uploading the image:', error);
-    } finally {
-      client.sendMessage(' ')
     }
 }
 
 // Function to start a game
 async function startGame(client, message) {
     if (gameStarted) {
-        await client.sendMessage('A game is already in progress.');
+        await client.send({message :'A game is already in progress.'});
         return;
     }
 
     gameStarted = true;
-    await client.sendMessage('A new game has started.');
+    await client.send({message : 'A new game has started.'});
     await sendBoardImage(client);
 }
 
@@ -102,7 +92,7 @@ async function endGame(client) {
     }
 
     gameStarted = false;
-    await client.sendMessage('Game Over.');
+    await client.send({message : 'Game Over.'});
     game.reset();
 }
 
