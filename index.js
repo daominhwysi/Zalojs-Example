@@ -1,16 +1,17 @@
 const { init } = require('zalojs');
-const config = require('./config.json');
+
 const Client = require('zalojs').default;
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config()
 
 const prefix = '!';
 
 (async () => {
   const { browser, page } = await init({
-    groupName: config.groupName,
-    groupID: config.groupID,
-    headless: config.headless,
+    groupName: process.env.GROUP_NAME,
+    groupID: process.env.GROUP_ID,
+    headless: false,
   });
 
   const client = new Client(page);
